@@ -201,7 +201,8 @@ class GitMessage(Resource):
         return "Nothing", 404
 
 if __name__ == "__main__":
-
+    
+    chat_id = config.chat_id
     bot = telebot.TeleBot(config.token)
 
     api.add_resource(GitMessage, "/git/<string:chat>")
