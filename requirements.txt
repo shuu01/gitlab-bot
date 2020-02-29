@@ -1,0 +1,4 @@
+requests
+flask
+pyTelegramBotAPI
+flask_restful

@@ -1,0 +1,38 @@
+image: docker:latest
+
+stages:
+- build
+- deploy
+
+before_script:
+- docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+build:
+  stage: build
+  variables:
+    DOCKER_BUILDKIT: 1
+  script:
+  - >
+    docker build
+    --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    --file Dockerfile
+    .
+  - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+
+deploy:
+  stage: deploy
+  only:
+  - master
+  script:
+  - docker stop $CI_PROJECT_NAME || true
+  - docker rm $CI_PROJECT_NAME || true
+  - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  - >
+    docker run -d
+    --name $CI_PROJECT_NAME
+    --restart unless-stopped
+    -e TOKEN
+    -e CHAT_ID
+    -p 5001:5000
+    -v /etc/localtime:/etc/localtime
+    $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
