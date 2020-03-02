@@ -4,6 +4,7 @@
 import config
 import logging
 import telebot
+from werkzeug.local import Local
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse
 
@@ -11,8 +12,9 @@ logging.basicConfig()
 
 app = Flask(__name__)
 api = Api(app)
+local = Local()
 
-pipelines = {}
+local.pipelines = pipelines = {}
 '''
 {
   1234: {
