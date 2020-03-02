@@ -70,15 +70,16 @@ def send_message(pipeline):
 
 def prepare_text(pipeline):
 
+    #builds = sorted(data.get('builds'), key=lambda k: k['id']) # list of dictionaries
     jobs = []
-    for job_id, job in pipeline.jobs.items():
+    for job_id, job in sorted(pipeline.jobs.items(), key=lambda k: k[0]): # tuple of key, value pairs
         duration_text = f"{job.duration} seconds" if job.duration > 0 else ""
         jobs.append(f"{job.name}: [{icon.get(job.status, '❔')}]({pipeline.url}/-/jobs/{job_id}) {duration_text}")
     jobs = "\n".join(jobs)
 
     duration_text = f"{pipeline.duration} seconds" if pipeline.duration >0 else ""
     text = (
-        f'🔥 *{pipeline.namespace}/{pipeline.name}*\n'
+        f'🔥 *{pipeline.namespace}/{pipeline.name}*\n'python sorted dict by key value
         f'🙂 {pipeline.username}\n'
         f'```\n'
         f'⎇ {pipeline.ref}\n'
@@ -151,7 +152,6 @@ class GitMessage(Resource):
 
         if event == 'Pipeline Hook':
             pipeline = Pipeline(data)
-            #builds = sorted(data.get('builds'), key=lambda k: k['id'])
 
             if pipeline._id in pipelines.keys():
                 current_pipeline = pipelines[pipeline._id]
@@ -201,7 +201,7 @@ class GitMessage(Resource):
         return "Nothing", 404
 
 if __name__ == "__main__":
-    
+
     chat_id = config.chat_id
     bot = telebot.TeleBot(config.token)
 
