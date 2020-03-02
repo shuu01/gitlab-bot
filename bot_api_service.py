@@ -157,6 +157,8 @@ class GitMessage(Resource):
                 current_pipeline = pipelines[pipeline._id]
                 current_pipeline.status = pipeline.status
                 current_pipeline.duration = pipeline.duration
+                for job_id, job in current_pipeline.jobs.items():
+                    job.status = pipeline.jobs.get(job_id).status
                 status = update_message(current_pipeline)
                 if status:
                     return "Message_sent"
