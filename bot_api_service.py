@@ -79,7 +79,7 @@ def prepare_text(pipeline):
 
     duration_text = f"{pipeline.duration} seconds" if pipeline.duration >0 else ""
     text = (
-        f'🔥 *{pipeline.namespace}/{pipeline.name}*\n'python sorted dict by key value
+        f'🔥 *{pipeline.namespace}/{pipeline.name}*\n'
         f'🙂 {pipeline.username}\n'
         f'```\n'
         f'⎇ {pipeline.ref}\n'
