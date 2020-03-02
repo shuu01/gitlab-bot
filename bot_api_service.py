@@ -11,7 +11,6 @@ logging.basicConfig()
 
 app = Flask(__name__)
 api = Api(app)
-local = Local()
 
 pipelines = {}
 '''
