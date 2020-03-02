@@ -4,7 +4,6 @@
 import config
 import logging
 import telebot
-from werkzeug.local import Local
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse
 
@@ -14,7 +13,7 @@ app = Flask(__name__)
 api = Api(app)
 local = Local()
 
-local.pipelines = pipelines = {}
+pipelines = {}
 '''
 {
   1234: {
@@ -159,8 +158,13 @@ class GitMessage(Resource):
                 current_pipeline = pipelines[pipeline._id]
                 current_pipeline.status = pipeline.status
                 current_pipeline.duration = pipeline.duration
-                for job_id, job in current_pipeline.jobs.items():
-                    job.status = pipeline.jobs.get(job_id).status
+                for job_id, job in pipeline.jobs.items():
+                    if job_id in current_pipeline.jobs.keys():
+                        current_pipeline.jobs.get(job_id).status = job.status
+                    else:
+                        for jid, j in current_pipeline.jobs.items():
+                            if j.name == job.name:
+                                current_pipeline.jobs.get(jid).status = j.status
                 status = update_message(current_pipeline)
                 if status:
                     return "Message_sent"
