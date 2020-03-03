@@ -7,7 +7,13 @@ import telebot
 from flask import Flask, request
 from flask_restful import Api, Resource, reqparse
 
-logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s %(levelname)-8s  %(message)s')
+# console = logging.StreamHandler()
+# console.setLevel(logging.DEBUG)
+# console.setFormatter(formatter)
+# logger.addHandler(console)
 
 app = Flask(__name__)
 api = Api(app)
@@ -47,7 +53,7 @@ def update_message(pipeline):
             disable_web_page_preview = "yes"
         )
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
         return
 
     return True
@@ -63,7 +69,7 @@ def send_message(pipeline):
             disable_web_page_preview = "yes"
         )
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
         return
 
     return msg.message_id
@@ -152,8 +158,10 @@ class GitMessage(Resource):
 
         if event == 'Pipeline Hook':
             pipeline = Pipeline(data)
+            logger.debug(pipeline)
 
             if pipeline._id in pipelines.keys():
+                logger.debug('pipeline already exists, update it')
                 current_pipeline = pipelines[pipeline._id]
                 current_pipeline.status = pipeline.status
                 current_pipeline.duration = pipeline.duration
@@ -166,9 +174,9 @@ class GitMessage(Resource):
                                 current_pipeline.jobs.get(jid).status = j.status
                 status = update_message(current_pipeline)
                 if status:
-                    return "Message_sent"
+                    return "Message_updated"
                 else:
-                    return "Message not sent", 404
+                    return "Message not updated", 404
             else:
                 message_id = send_message(pipeline)
                 pipeline.message_id = message_id
@@ -180,10 +188,11 @@ class GitMessage(Resource):
 
         elif event == 'Job Hook':
             job = Job(data)
+            logger.debug(job)
             pipeline = pipelines.get(job.pipeline_id)
             if not pipeline:
-                logging.warning('pipeline not found')
-                return "Message not sent", 404
+                logger.warning('pipeline not found')
+                return "pipeline not found", 404
             p_job = pipeline.jobs.get(job._id)
             if p_job:
                 p_job.status = job.status
@@ -193,9 +202,9 @@ class GitMessage(Resource):
             status = update_message(pipeline)
 
             if status:
-                return "Message sent"
+                return "Message updated"
             else:
-                return "Message not sent", 404
+                return "Message not updated", 404
 
         else:
             return "Hook is not supported", 404
