@@ -88,8 +88,8 @@ def prepare_text(pipeline):
         f'🔥 *{pipeline.namespace}/{pipeline.name}*\n'
         f'🙂 {pipeline.username}\n'
         f'```\n'
-        f'⎇ {pipeline.ref}\n'
-        f'{pipeline.commit_message}\n'
+        f'[⎇]({pipeline.commit.get("url")}) {pipeline.ref}\n'
+        f'{pipeline.commit.get("message")}\n'
         f'```\n'
         f'{jobs}\n\n'
         f'[{icon.get(pipeline.status, "")}]({pipeline.url}/pipelines/{pipeline._id}) {duration_text}'
@@ -129,8 +129,9 @@ class Pipeline(object):
         self.namespace = project.get('namespace')
         self.url = project.get('web_url')
 
+        self.commit = data.get('commit', {})
+
         self.username = data.get('user', {}).get('name')
-        self.commit_message = data.get('commit', {}).get('message')
 
         self.jobs = {}
         for build in data.get('builds'):
