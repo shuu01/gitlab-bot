@@ -117,7 +117,7 @@ class Pipeline(object):
     def __init__(self, data):
         attr = data.get('object_attributes', {})
         self._id = attr.get('id')
-        self.attr = data.get('object_attributes', {})
+        attr = data.get('object_attributes', {})
         self.ref = attr.get('ref')
         self.status = attr.get('status')
         self.duration = attr.get('duration')
