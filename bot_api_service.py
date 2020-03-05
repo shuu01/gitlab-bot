@@ -170,9 +170,11 @@ class GitMessage(Resource):
                     if job_id in current_pipeline.jobs.keys():
                         current_pipeline.jobs.get(job_id).status = job.status
                     else:
-                        for jid, j in current_pipeline.jobs.items():
-                            if j.name == job.name:
-                                current_pipeline.jobs.get(jid).status = j.status
+                        current_pipeline.jobs[job_id] = job
+                    #else:
+                        #for jid, j in current_pipeline.jobs.items():
+                            #if j.name == job.name:
+                                #current_pipeline.jobs.get(jid).status = j.status
                 status = update_message(current_pipeline)
                 if status:
                     return "Message_updated"
