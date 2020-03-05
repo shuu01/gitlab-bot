@@ -179,9 +179,10 @@ class GitMessage(Resource):
                 else:
                     return "Message not updated", 404
             else:
+                pipelines[pipeline._id] = pipeline
                 message_id = send_message(pipeline)
                 pipeline.message_id = message_id
-                pipelines[pipeline._id] = pipeline
+
                 if message_id:
                     return "Message sent"
                 else:
