@@ -94,7 +94,7 @@ def prepare_text(pipeline):
         f'{jobs}\n\n'
         f'[{icon.get(pipeline.status, "")}]({pipeline.url}/pipelines/{pipeline._id}) {duration_text}'
     )
-    return text
+    return text.replace("_", "-")
 
 class Job(object):
     def __init__(self, data={}):
