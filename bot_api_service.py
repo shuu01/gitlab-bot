@@ -87,7 +87,7 @@ def prepare_text(pipeline):
     text = (
         f'🔥 *{pipeline.namespace}/{pipeline.name}*\n'
         f'🙂 {pipeline.username}\n'
-        f'[⎇]({pipeline.commit.get("url")}) {pipeline.ref}\n'
+        f'`[⎇]({pipeline.commit.get("url")}) {pipeline.ref}`\n'
         f'```\n'
         f'{pipeline.commit.get("message")}\n'
         f'```\n'
